@@ -43,3 +43,9 @@ jobs:
       env:
         GOOS: ${{ matrix.goos }}
       run: go test -v .
+      
+    - name: Upload ${{ matrix.goos }} artifact
+      uses: actions/upload-artifact@v2.2.0
+      with:
+        name: ${{ matrix.goos }}
+        path: obs-control*
