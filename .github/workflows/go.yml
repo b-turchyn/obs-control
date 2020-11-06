@@ -24,7 +24,7 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
-    - name: Get dependencies
+    - name: Get dependencies for ${{ matrix.goos }}
       env:
         GOOS: ${{ matrix.goos }}
       run: |
@@ -39,5 +39,5 @@ jobs:
         GOOS: ${{ matrix.goos }}
       run: go build -v .
 
-    - name: Test
+    - name: Test ${{ matrix.goos }}
       run: go test -v .
