@@ -1,0 +1,51 @@
+name: Go
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [windows, linux, darwin]
+    steps:
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.13
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get dependencies for ${{ matrix.goos }}
+      env:
+        GOOS: ${{ matrix.goos }}
+      run: |
+        go get -v -t -d ./...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
+
+    - name: Build ${{ matrix.goos }}
+      env:
+        GOOS: ${{ matrix.goos }}
+      run: go build -v .
+
+    - name: Test ${{ matrix.goos }}
+      env:
+        GOOS: ${{ matrix.goos }}
+      run: go test -v .
+      
+    - name: Upload ${{ matrix.goos }} artifact
+      uses: actions/upload-artifact@v2.2.0
+      with:
+        name: ${{ matrix.goos }}
+        path: obs-control*
