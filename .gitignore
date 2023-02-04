@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+obs-control
 
 # Test binary, built with `go test -c`
 *.test
@@ -16,3 +17,4 @@
 
 # Configuration file
 config.yaml
+steps.yaml

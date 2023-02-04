@@ -18,9 +18,9 @@ package cmd
 import (
 	"log"
 
-	"github.com/christopher-dG/go-obs-websocket"
+	"github.com/andreykaipov/goobs/api/requests/transitions"
+	"github.com/b-turchyn/obs-control/client"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // transitionCmd represents the transition command
@@ -29,34 +29,19 @@ var transitionCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Println(viper.GetString("host"))
-		c := obsws.Client{
-			Host:     viper.GetString("host"),
-			Port:     viper.GetInt("port"),
-			Password: viper.GetString("password"),
-		}
-		if err := c.Connect(); err != nil {
-			log.Fatal(err)
-		}
-		defer c.Disconnect()
+          c := client.NewClient()
+          defer c.Disconnect()
 
-		req := obsws.NewSetCurrentTransitionRequest(args[0])
-		if err := req.Send(c); err != nil {
-			log.Fatal(err)
-		}
-	},
+          _, err := c.Transitions.SetCurrentSceneTransition(&transitions.SetCurrentSceneTransitionParams{
+            TransitionName: args[0],
+          })
+
+          if err != nil {
+            log.Fatal(err)
+          }
+        },
 }
 
 func init() {
 	rootCmd.AddCommand(transitionCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// transitionCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// transitionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

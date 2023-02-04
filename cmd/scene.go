@@ -18,9 +18,9 @@ package cmd
 import (
 	"log"
 
-	"github.com/christopher-dG/go-obs-websocket"
+	"github.com/andreykaipov/goobs/api/requests/scenes"
+        "github.com/b-turchyn/obs-control/client"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // sceneCmd represents the scene command
@@ -28,23 +28,17 @@ var sceneCmd = &cobra.Command{
 	Use:   "scene",
 	Short: "Switch to scene",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		log.Println(viper.GetString("host"))
-		c := obsws.Client{
-			Host:     viper.GetString("host"),
-			Port:     viper.GetInt("port"),
-			Password: viper.GetString("password"),
-		}
-		if err := c.Connect(); err != nil {
-			log.Fatal(err)
-		}
-		defer c.Disconnect()
+        Run: func(cmd *cobra.Command, args []string) {
+          c := client.NewClient()
+          defer c.Disconnect()
 
-		req := obsws.NewSetCurrentSceneRequest(args[0])
-		if err := req.Send(c); err != nil {
-			log.Fatal(err)
-		}
-	},
+          _, err := c.Scenes.SetCurrentProgramScene(&scenes.SetCurrentProgramSceneParams{
+            SceneName: args[0],
+          })
+          if err != nil {
+            log.Fatal(err)
+          }
+        },
 }
 
 func init() {
