@@ -10,13 +10,17 @@ import (
 func NewClient() *goobs.Client {
   var c *goobs.Client
   var err error
+  host := fmt.Sprintf("%s:%d", viper.GetString("host"), viper.GetInt("port"))
+  log.Printf("Host: %s\n", host)
   if viper.IsSet("password") {
-    c, err = goobs.New(fmt.Sprintf("%s:%d", viper.GetString("host"), viper.GetInt("port")), goobs.WithPassword(viper.GetString("password")))
+    log.Println("Connecting with password...")
+    c, err = goobs.New(host, goobs.WithPassword(viper.GetString("password")))
     if err != nil {
       log.Fatal(err)
     }
   } else {
-    c, err = goobs.New(fmt.Sprintf("%s:%d", viper.GetString("host"), viper.GetInt("port")))
+    log.Println("Connecting without password...")
+    c, err = goobs.New(host)
     if err != nil {
       log.Fatal(err)
     }
