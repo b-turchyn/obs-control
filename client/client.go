@@ -7,8 +7,14 @@ import (
   "github.com/andreykaipov/goobs"
   "github.com/spf13/viper"
 )
+
+var c *goobs.Client
+
 func NewClient() *goobs.Client {
-  var c *goobs.Client
+  if c != nil {
+    return c
+  }
+
   var err error
   host := fmt.Sprintf("%s:%d", viper.GetString("host"), viper.GetInt("port"))
   log.Printf("Host: %s\n", host)
