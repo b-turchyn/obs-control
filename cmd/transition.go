@@ -30,7 +30,6 @@ var transitionCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
           c := client.NewClient()
-          defer c.Disconnect()
 
           _, err := c.Transitions.SetCurrentSceneTransition(&transitions.SetCurrentSceneTransitionParams{
             TransitionName: args[0],

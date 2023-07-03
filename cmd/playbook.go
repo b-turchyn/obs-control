@@ -94,6 +94,10 @@ func (s *step) runStep() {
 		cmd.Run(cmd, []string{s.Options["duration"]})
 	} else if s.Name == "transition" {
 		cmd.Run(cmd, []string{s.Options["name"]})
+	} else if s.Name == "filter" {
+		cmd.Run(cmd, []string{s.Options["scene"], s.Options["filter"], s.Options["enabled"]})
+	} else if s.Name == "source" {
+		cmd.Run(cmd, []string{s.Options["scene"], s.Options["source"], s.Options["enabled"]})
 	}
 
 }
